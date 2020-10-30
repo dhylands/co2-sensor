@@ -1,8 +1,8 @@
 #![no_std]
 #![no_main]
 
-use cortex_m_rt::entry;
-use co2_sensor as _; // memory layout + panic handler
+use co2_sensor as _;
+use cortex_m_rt::entry; // memory layout + panic handler
 
 #[entry]
 fn main() -> ! {

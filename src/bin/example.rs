@@ -6,15 +6,11 @@ use co2_sensor as _; // global logger + panicking-behavior + memory layout
 use hal::gpio::Pin;
 use nrf52840_hal::{
     self as hal,
-    gpio::{p0::{Parts as P0Parts}, Level, Output, PushPull},
-    Temp,
-    Timer,
+    gpio::{p0::Parts as P0Parts, Level, Output, PushPull},
+    Temp, Timer,
 };
 
-use embedded_hal::{
-    blocking::delay::DelayMs,
-    digital::v2::OutputPin,
-};
+use embedded_hal::{blocking::delay::DelayMs, digital::v2::OutputPin};
 
 /// A trait for controlling a signal (i.e. a gpio output like a relay or LED).
 ///
@@ -32,14 +28,15 @@ pub trait OutputSignal {
 }
 
 /// Implements a Signal which is on when a GPIO pin is at a logic low.
-pub struct GpioOutputSignalActiveLow
-{
+pub struct GpioOutputSignalActiveLow {
     pin: Pin<Output<PushPull>>,
 }
 
 impl GpioOutputSignalActiveLow {
     pub fn new<Mode>(pin: Pin<Mode>) -> Self {
-        Self { pin: pin.into_push_pull_output(Level::High) }
+        Self {
+            pin: pin.into_push_pull_output(Level::High),
+        }
     }
 }
 
@@ -56,14 +53,15 @@ impl OutputSignal for GpioOutputSignalActiveLow {
 }
 
 /// Implements a Signal which is on when a GPIO pin is at a logic high.
-pub struct GpioOutputSignalActiveHigh
-{
+pub struct GpioOutputSignalActiveHigh {
     pin: Pin<Output<PushPull>>,
 }
 
 impl GpioOutputSignalActiveHigh {
     pub fn new<Mode>(pin: Pin<Mode>) -> Self {
-        Self { pin: pin.into_push_pull_output(Level::Low) }
+        Self {
+            pin: pin.into_push_pull_output(Level::Low),
+        }
     }
 }
 
@@ -85,8 +83,12 @@ pub struct RGBLed<'a> {
     blue: &'a mut dyn OutputSignal,
 }
 
-impl <'a> RGBLed<'a> {
-    pub fn new(red: &'a mut dyn OutputSignal, green: &'a mut dyn OutputSignal, blue: &'a mut dyn OutputSignal) -> Self {
+impl<'a> RGBLed<'a> {
+    pub fn new(
+        red: &'a mut dyn OutputSignal,
+        green: &'a mut dyn OutputSignal,
+        blue: &'a mut dyn OutputSignal,
+    ) -> Self {
         Self { red, green, blue }
     }
 
@@ -128,7 +130,6 @@ fn main() -> ! {
     let mut blue_pin = GpioOutputSignalActiveLow::new(pins.p0_28.degrade());
 
     let mut rgb_led = RGBLed::new(&mut red_pin, &mut green_pin, &mut blue_pin);
-
 
     let mut temp = Temp::new(board.TEMP);
 

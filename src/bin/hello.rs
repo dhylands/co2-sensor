@@ -7,10 +7,7 @@ use nrf52840_hal::{
     Timer,
 };
 
-use embedded_hal::{
-    blocking::delay::DelayMs,
-    digital::v2::OutputPin,
-};
+use embedded_hal::{blocking::delay::DelayMs, digital::v2::OutputPin};
 
 use co2_sensor as _; // global logger + panicking-behavior + memory layout
 
@@ -29,7 +26,7 @@ fn main() -> ! {
         timer.delay_ms(1000u32);
         led_1.set_low().unwrap();
         timer.delay_ms(1000u32);
-    };
+    }
 
     // co2_sensor::exit()
 }
